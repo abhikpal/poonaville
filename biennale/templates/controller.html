@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body
+          { background: rgb(245, 245, 245); }
+
+      .wrapper 
+          { max-width: 30em; margin: auto; }
+
+      .button 
+          { width: 9em; height: 9em;
+            margin: 0.5em; display: block;
+            float: left; background: rgb(245, 245, 245);
+            border-radius: 1em;}
+
+      .activated 
+          { background: rgb(51, 51, 51); }
+
+      .activated:hover
+          { background: rgb(127, 127, 127); }
+
+      .up
+          { border-top-right-radius: 5em; border-top-left-radius: 5em; }
+
+      .down
+          { border-bottom-right-radius: 5em; border-bottom-left-radius: 5em; }
+      
+      .left
+          { border-top-left-radius: 5em; border-bottom-left-radius: 5em; }
+      
+      .right
+          { border-top-right-radius: 5em; border-bottom-right-radius: 5em; }
+
+      .statusbar
+          { color:rgb(51, 51, 51); font-family: serif;
+            text-align: center; font-weight: bold;
+            float: left; width: 100%;
+            font-size: 4em;
+            display: block; margin-top: 1% ;}
+
+    </style>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+      var socket = io.connect('http://' + document.domain + ':' + location.port);
+      socket.on('connect', function() {
+          socket.emit('my event', {data: 'I\'m connected!'});
+      });
+    </script>
+  </head>
+    
+  <body>
+    <div class="wrapper">
+      <div class="button"></div>
+      <a href="/up/"><div class="button activated up"></div></a>
+      <div class="button"></div>
+
+      <a href="/left/"><div class="button activated left"></div></a>
+      <a href="/mid/"><div class="button activated"></div></a>
+      <a href="/projection/"><div class="button activated right"></div></a>
+
+      <div class="button"></div>
+      <a href="/projection/"><div class="button activated down"></div></a>
+      <div class="button"></div>
+
+      <div class="statusbar"><i>identifier</i><br/>{{ ip_address }}</div>
+      <!-- CONTROLLER UI TEST STRING -->
+    </div>
+  </body>
+</html>
