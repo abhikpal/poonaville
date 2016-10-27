@@ -1,0 +1,58 @@
+body {
+    background: rgb(245, 245, 245);
+}
+
+.wrapper  {
+    max-width: 30em;
+    margin: auto;
+}
+
+.controller  {
+    width: 9em;
+    height: 9em;
+    margin: 0.5em;
+    display: block;
+    float: left;
+    background: rgb(245, 245, 245);
+    border-radius: 1em;
+}
+
+.activated  {
+    background: rgb(51, 51, 51);
+}
+
+.activated:hover {
+    background: rgb(127, 127, 127);
+}
+
+.up {
+    border-top-right-radius: 5em;
+    border-top-left-radius: 5em;
+}
+
+.down {
+    border-bottom-right-radius: 5em;
+    border-bottom-left-radius: 5em;
+}
+
+.left {
+    border-top-left-radius: 5em;
+    border-bottom-left-radius: 5em;
+}
+
+.right {
+    border-top-right-radius: 5em;
+    border-bottom-right-radius: 5em;
+}
+
+.statusbar {
+    color:rgb(51, 51, 51);
+    font-family: serif;
+    text-align: center;
+    font-weight: bold;
+    float: left;
+    width: 100%;
+    font-size: 4em;
+    display: block;
+    margin-top: 1% ;
+}
