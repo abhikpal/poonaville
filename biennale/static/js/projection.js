@@ -5,6 +5,6 @@ $(document).ready(function() {
     var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
 
     socket.on('movement', function(msg) {
-        $('#projection').append('<br>' + $('<div/>').text(msg.data).html());
+        $('#projection').append('<br>' + $('<div/>').text(msg.x + ", " + msg.y).html());
     });
-});   
+});
