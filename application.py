@@ -1,5 +1,6 @@
 #
-# <program descripion>
+# Poonaville
+# (for the Pune Biennale 2017)
 # Copyright (C) 2016  Abhik Pal
 #
 # This program is free software: you can redistribute it and/or modify
