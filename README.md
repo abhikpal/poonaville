@@ -6,9 +6,9 @@
 game updates. To set up a development environment, make sure that `pip`
 and `virtualenv` are installed on the target system.
 
-The use the following commands to setup a development environment
+The use the following commands to setup the development environment
 
-```
+```bash
 # clone the repo
 git clone 'https://github.com/abhikpal/poonaville/'
 
@@ -28,10 +28,15 @@ python application.py
 
 ## Usage
 
-The main game projection can be viewed by going to
-`http://127.0.0.1:5000/projection/` and the controller can be accessed by
-visiting `http://127.0.0.1:5000/`. If the game is setup on a local network,
-change `127.0.0.1` to the ip address of the machine running the
-application (on *nix based machines, use the command `ip addr show` to view
-the IP address of the machine).
+The Flask app starts a webserver on 0.0.0.0:5000.
+
+* Users can view the controller by going to `http://0.0.0.0:5000/` through
+their devices. Replace the `0.0.0.0` with the IP address of the machine the
+game is running on (on \*nix machines, use `ip addr show` to view the IP
+address).
+
+* The main game screen -- the projection -- is broadcasted on
+`http://127.0.0.1:5000/projection/`. This should ideally be accessed on the
+machine acting as the server.
+
 
