@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Poonaville | Signup</title>
+    <style type="text/css">
+        body {
+            width: 45em;
+            margin: auto;
+            margin-top: 5em;
+        }
+    </style>
+</head>
+<body>
+    <h3>Signup</h3>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.name.label }} <br/> {{ form.name }}
+        </p>
+
+        <p>
+            {{ form.email.label }} <br/> {{ form.email }}
+        </p>
+
+        <p>
+            {{ form.password.label }} <br/> {{ form.password }}
+        </p>
+
+        <p>
+            {{ form.password_reenter.label }} <br/> {{ form.password_reenter }}
+        </p>
+
+        <p>
+            {{ form.user_type.label }} <br/> {{ form.user_type }}
+        </p>    
+
+        <p>
+            {{ form.submit }}
+        </p>
+
+    </form>
+</body>
+</html>

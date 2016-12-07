@@ -16,17 +16,20 @@
         Don't have an account? <a href="/signup/">Sign up</a> now.
     </p>
     <form method="POST">
+        {{ form.hidden_tag() }}
         <p>
-            <label for="pv-email"><h5>EMAIL</h5></label>
-            <input type="email" name="pv-email" id="pv-email">
+            <label>{{ form.email.label }}</label><br/>
+            {{ form.email }}
         </p>
 
         <p>
-            <label for="pv-password"><h5>PASSWORD</h5></label>
-            <input type="password" name="pv-password" id="pv-password">
+            <label>{{ form.password.label }}</label><br/>
+            {{ form.password }}
         </p>
 
-        <p><input type="submit" name="pv-submit" value="Login"></p>
+        <p>
+            {{ form.submit }}
+        </p>
     </form>
 </body>
 </html>
