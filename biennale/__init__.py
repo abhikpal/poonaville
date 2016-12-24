@@ -19,11 +19,17 @@
 
 
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'PUNE-biennale-2017'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///poonaville.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
 socketio = SocketIO(app, async_mode=None)
 
 import biennale.routes
 import biennale.control
+import biennale.database

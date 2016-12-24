@@ -17,7 +17,29 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import sys
+
 from biennale import app
+from biennale import db
 from biennale import socketio
 
-socketio.run(app, host='0.0.0.0', debug=True)
+if __name__ == '__main__':
+    try:
+        if sys.argv[1] == 'createdb':
+            db.create_all()
+        elif sys.argv[1] == 'initdb':
+            pass
+        elif sys.argv[1] == 'reset':
+            pass
+        elif sys.argv[1] == 'start':
+            socketio.run(app, host='0.0.0.0', debug=True)
+        else:
+            raise IndexError
+    except IndexError:
+        print("ERROR: Missing/Incorrect parameters")
+        print("")
+        print("Possible parameters are:")
+        print("start \t\t Starts the server.")
+        print("createdb \t\t Creates the database.")
+        print("initdb \t\t Initializes the database.")
+        print("resetdb \t\t Resets the database.")
