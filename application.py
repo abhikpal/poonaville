@@ -27,10 +27,14 @@ if __name__ == '__main__':
     try:
         if sys.argv[1] == 'createdb':
             db.create_all()
-        elif sys.argv[1] == 'initdb':
-            pass
-        elif sys.argv[1] == 'reset':
-            pass
+            print("DATABASE CREATION SUCCESSFUL.")
+        elif sys.argv[1] == 'purgedb':
+            db.drop_all()
+            print("DATABASE PURGED. ALL DATA HAS BEEN REMOVED.")
+        elif sys.argv[1] == 'resetdb':
+            db.drop_all()
+            db.create_all()
+            print("DATABASE RESET SUCCESSFUL")
         elif sys.argv[1] == 'start':
             socketio.run(app, host='0.0.0.0', debug=True)
         else:
@@ -39,7 +43,7 @@ if __name__ == '__main__':
         print("ERROR: Missing/Incorrect parameters")
         print("")
         print("Possible parameters are:")
-        print("start \t\t Starts the server.")
-        print("createdb \t\t Creates the database.")
-        print("initdb \t\t Initializes the database.")
-        print("resetdb \t\t Resets the database.")
+        print("\tstart    - Starts the server.")
+        print("\tcreatedb - Creates the database.")
+        print("\tpurgedb  - Deletes all information in the database.")
+        print("\tresetdb  - Resets the database.")

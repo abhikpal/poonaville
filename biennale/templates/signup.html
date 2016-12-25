@@ -12,6 +12,9 @@
 </head>
 <body>
     <h3>Signup</h3>
+    {% for message in get_flashed_messages() %}
+        <p><b style="color: red;">{{ message }}</b></p>
+    {% endfor %}
     <form method="POST">
         {{ form.hidden_tag() }}
         <p>
@@ -25,14 +28,6 @@
         <p>
             {{ form.password.label }} <br/> {{ form.password }}
         </p>
-
-        <p>
-            {{ form.password_reenter.label }} <br/> {{ form.password_reenter }}
-        </p>
-
-        <p>
-            {{ form.user_type.label }} <br/> {{ form.user_type }}
-        </p>    
 
         <p>
             {{ form.submit }}

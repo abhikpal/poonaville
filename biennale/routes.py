@@ -20,14 +20,17 @@
 from flask import redirect
 from flask import render_template
 from flask import session
+from flask import flash
 
 from biennale import app
+from biennale import db
 from biennale import socketio
+from biennale.database import User
 from biennale.forms import LoginForm
 from biennale.forms import SignUpForm
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
     email = None
     password = None
@@ -36,8 +39,14 @@ def index():
     if login_form.validate_on_submit():
         email = login_form.email.data
         password = login_form.password.data
-        print("Email: %s, Password: %s" % (email, password))
-        session['active'] = True
+        
+        user = User.query.filter_by(email=email).first()
+        if user is None:
+            flash("You don't have an account yet! Sign Up first")
+        elif user.verify_password(password):
+            session['active'] = True
+        else:
+            flash("Invalid password.")
 
     if session.get('active', False):
         return render_template('index.html', async_mode=socketio.async_mode)
@@ -61,8 +70,19 @@ def signup():
         email = signup_form.email.data
         password = signup_form.password.data
         name = signup_form.name.data
-        user_type = signup_form.user_type.data
-        print(email, password, name, user_type)
+
+        try:
+            new_user = User(name, email, password)
+            db.session.add(new_user)
+            db.session.commit()
+            flash("Account creation successful.")
+        except Exception as e:
+            db.session.rollback()
+            db.session.flush()
+            flash("The account alreaddy exists!")
+        return redirect('/')
+
+        
     return render_template('signup.html', form=signup_form, async_mode=socketio.async_mode)
 
 

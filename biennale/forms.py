@@ -30,14 +30,7 @@ from wtforms.validators import EqualTo
 class SignUpForm(FlaskForm):
     name = StringField("Name", validators=[Required()])
     email = StringField("Email", validators=[Email(), Required()])
-    password = PasswordField("Enter password", validators=[Required()])
-    password_reenter = PasswordField("Re-enter password",
-                                    validators=[Required(), EqualTo(password)])
-    user_type = SelectField("User type", choices=[
-            ('B', "Builder"),
-            ('E', "Entrepreneur"),
-            ('P', "Punekar")
-        ], validators=[Required()])
+    password = PasswordField("Select password", validators=[Required()])
     submit = SubmitField("Submit")
 
 

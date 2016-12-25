@@ -12,6 +12,9 @@
 </head>
 <body>
     <h3>Login</h3>
+    {% for message in get_flashed_messages() %}
+        <p><b>{{ message }}</b></p>
+    {% endfor %}
     <p>
         Don't have an account? <a href="/signup/">Sign up</a> now.
     </p>

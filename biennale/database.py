@@ -19,14 +19,15 @@
 
 
 import random
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from biennale import db
 
-class Users(db.Model):
+class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
     email = db.Column(db.String(120), unique=True)
-    password = db.Column(db.String(120))
+    password_hash = db.Column(db.String(128))
 
     start_coord_x = db.Column(db.Float)
     start_coord_y = db.Column(db.Float)
@@ -41,7 +42,8 @@ class Users(db.Model):
     def __init__(self, name, email, password):
         self.name = name
         self.email = email
-        self.password = password
+        
+        self.password_hash = generate_password_hash(password)
 
         self.start_coord_x = random.random()
         self.start_coord_y = random.random()
@@ -49,6 +51,15 @@ class Users(db.Model):
         self.meter_status = 0
         self.meter_life = 50
         self.meter_karma = 0
+
+    def get_id(self):
+        try:
+            return unicode(self.id)
+        except NameError:
+            return str(self.id)
+    
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
         return '<USER %r>' % self.email
