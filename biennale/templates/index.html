@@ -10,24 +10,13 @@
     {# <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script> #}
     
     <script type="text/javascript" src="/static/js/controller.js"></script>    
-
-    <link rel="stylesheet" type="text/css" href="/static/css/controller-ui.css">
   </head>
   <body>
-    <div class="wrapper">
-      <div class="controller"></div>
-      <div class="controller activated up" id="up"></div>
-      <div class="controller"></div>
-
-      <div class="controller activated left" id="left"></div>
-      <div class="controller"></div>
-      <div class="controller activated right" id="right"></div>
-
-      <div class="controller"></div>
-      <div class="controller activated down" id="down"></div>
-      <div class="controller"></div>
-
-      {# <div class="statusbar"><i>identifier</i><br/>{{ ip_address }}</div> #}
-    </div>
+    <p>
+      <div class="controller up" id="up">up</div>
+      <div class="controller left" id="left">left</div>
+      <div class="controller right" id="right">right</div>
+      <div class="controller down" id="down">down</div>
+    </p> 
   </body>
 </html>
