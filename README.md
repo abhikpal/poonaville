@@ -22,8 +22,11 @@ source venv/bin/activate
 cd poonaville
 pip install -r requirements.txt
 
-# run the application.py file to strat the server
-python application.py
+# create the database
+python application.py createdb
+
+# run the server
+python applicaiton.py start
 ```
 
 ## Usage
