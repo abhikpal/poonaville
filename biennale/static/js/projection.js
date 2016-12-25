@@ -68,9 +68,13 @@ $(document).ready(function() {
 // "dies" naturally.
 // 
 // email: the email address of the player who needs to be eliminated
-function eliminate_player(email) {
+// location_x: x-coordinate of the user before elimination
+// location_y: y-coordinate of the user before elimination
+function eliminate_player(email, location_x, location_y) {
     socket.emit('remove_user', {
-        'email': email
+        'email': email,
+        'locx': location_x,
+        'locy': location_y
     });
     return false;
 }

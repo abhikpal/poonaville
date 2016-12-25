@@ -23,7 +23,6 @@ from flask import session
 
 from biennale import db
 from biennale import socketio
-from biennale import active_users
 
 from biennale.database import User
 
@@ -60,12 +59,29 @@ def user_leave():
 @socketio.on('remove_user', namespace='/projection')
 def remove_user(data):
     print(data)
+    player = User.query.filter_by(email=data['email']).first()
+    player.start_coord_x = data['locx']
+    player.start_coord_y = data['locy']
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        db.session.flush()
     socketio.emit('remove_user', data, namespace='/controller',
                 room=clients[data['email']])
 
 @socketio.on('update_meter', namespace='/projection')
 def update_user_meter(data):
     print(data)
+    player = User.query.filter_by(email=data['email']).first()
+    player.meter_karma  = data['karma']
+    player.meter_life  = data['life']
+    player.meter_status  = data['status']
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        db.session.flush()
     payload = {
         'karma': data['karma'],
         'life': data['life'],
