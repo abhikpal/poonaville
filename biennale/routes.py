@@ -18,17 +18,19 @@
 #
 
 from flask import redirect
+from flask import request
 from flask import render_template
 from flask import session
 from flask import flash
+from flask import g
 
 from biennale import app
 from biennale import db
 from biennale import socketio
+from biennale.control import user_join
 from biennale.database import User
 from biennale.forms import LoginForm
 from biennale.forms import SignUpForm
-
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -44,14 +46,12 @@ def index():
         if user is None:
             flash("You don't have an account yet! Sign Up first")
         elif user.verify_password(password):
-            session['active'] = True
+            session['email'] = user.email
+            return render_template('index.html', async_mode=socketio.async_mode)
         else:
             flash("Invalid password.")
 
-    if session.get('active', False):
-        return render_template('index.html', async_mode=socketio.async_mode)
-    return render_template('login.html', form=login_form,
-                            async_mode=socketio.async_mode)
+    return render_template('login.html', form=login_form)
 
 
 @app.route('/projection/')
@@ -81,12 +81,5 @@ def signup():
             db.session.flush()
             flash("The account alreaddy exists!")
         return redirect('/')
-
         
     return render_template('signup.html', form=signup_form, async_mode=socketio.async_mode)
-
-
-@app.route('/logout/')
-def logout():
-    session.pop('active')
-    return redirect('/')

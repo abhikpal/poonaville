@@ -24,21 +24,43 @@ $(document).ready(function() {
     // Connect to the Socket.IO server.
     socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
 
-    $('.controller#up').on("tap",      function() { sendCommand('up', '0', '1'); });
-    $('.controller#up').on("click",    function() { sendCommand('up', '0', '1'); });
+    $('#up').on("click",    function() { send_command('0', '1'); });
+    $('#down').on("click",  function() { send_command('0', '-1') });
+    $('#left').on("click",  function() { send_command('-1', '0') });
+    $('#right').on("click", function() { send_command('1', '0') });
 
-    $('.controller#down').on("tap",    function() { sendCommand('down', '0', '-1') });
-    $('.controller#down').on("click",  function() { sendCommand('down', '0', '-1') });
+    socket.on('update_meter', function(msg) {
+        // What to do when the meter is updates
+        // This should change progress bars on the controller, etc.
+        // msg is of the form 
+        //  {
+        //      'karma': <KARMA METER VALUE>,
+        //      'life': <LIFE METER VALUE>,
+        //      'status': <STATUS METER VALUE>
+        //  }
+        // 
+        console.log(msg);
+        return false;
+    });
 
-    $('.controller#left').on("tap",    function() { sendCommand('left', '-1', '0') });
-    $('.controller#left').on("click",  function() { sendCommand('left', '-1', '0') });
-
-    $('.controller#right').on("tap",   function() { sendCommand('right', '1', '0') });
-    $('.controller#right').on("click", function() { sendCommand('right', '1', '0') });
+    socket.on('remove_user', function(msg) {
+        // What to do when the user is eliminated from the game
+        // msg is of the form:
+        // {
+        //      'email': <email of the user>
+        // }
+        console.log(msg);
+        return false;
+    });
 
 });
 
-function sendCommand(command, xdir, ydir) {
-    socket.emit('update', {x:xdir, y:ydir, cmd:command});
+function send_command(xdir, ydir) {
+    socket.emit('movement', {
+        x:xdir,
+        y:ydir
+    });
     return false;
 }
+
+

@@ -19,17 +19,69 @@
 
 
 from flask import request
+from flask import session
 
+from biennale import db
 from biennale import socketio
+from biennale import active_users
 
-@socketio.on('update', namespace='/controller')
-def move(message):
-    # print(message)
-    # print(request.remote_addr)
-    socketio.emit('movement',
-                    {
-                        'x':message['x'],
-                        'y':message['y'],
-                        'client':request.remote_addr
-                    },
-                    namespace='/projection')
+from biennale.database import User
+
+clients = {}
+
+@socketio.on('connect', namespace='/controller')
+def user_join():
+    email = session['email']
+    user = User.query.filter_by(email=email).first()
+    payload = {
+        'email': user.email,
+        'start_coord_x': user.start_coord_x,
+        'start_coord_y': user.start_coord_y,
+        'meter_life': user.meter_life,
+        'meter_status': user.meter_status,
+        'meter_karma': user.meter_karma 
+    }
+    clients[email] = request.sid
+    print(payload)
+    socketio.emit('user_joined', payload, namespace='/projection')
+
+
+@socketio.on('disconnect', namespace='/controller')
+def user_leave():
+    if session['email'] in clients:
+        payload = {
+            'email': session['email']
+        }
+        socketio.emit('user_left', payload, namespace='/projection')
+        clients.pop(session['email'])
+        session.pop('email')
+
+
+@socketio.on('remove_user', namespace='/projection')
+def remove_user(data):
+    print(data)
+    socketio.emit('remove_user', data, namespace='/controller',
+                room=clients[data['email']])
+
+@socketio.on('update_meter', namespace='/projection')
+def update_user_meter(data):
+    print(data)
+    payload = {
+        'karma': data['karma'],
+        'life': data['life'],
+        'status': data['status']
+    }
+    socketio.emit('update_meter', payload, namespace='/controller',
+                room=clients[data['email']])
+
+
+@socketio.on('movement', namespace='/controller')
+def update_user_location(data):
+    if session['email'] in clients:
+        print(session['email'], data)
+        payload = {
+            'email': session['email'],
+            'x': data['x'],
+            'y': data['y']
+        }
+        socketio.emit('movement', payload, namespace='/projection')
