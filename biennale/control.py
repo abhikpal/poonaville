@@ -25,6 +25,7 @@ from biennale import db
 from biennale import socketio
 
 from biennale.database import User
+from biennale.database import Level
 
 clients = {}
 
@@ -41,6 +42,7 @@ def user_join():
         'meter_karma': user.meter_karma 
     }
     clients[email] = request.sid
+    update_earth_meter()
     print(payload)
     socketio.emit('user_joined', payload, namespace='/projection')
 
@@ -54,6 +56,7 @@ def user_leave():
         socketio.emit('user_left', payload, namespace='/projection')
         clients.pop(session['email'])
         session.pop('email')
+        update_earth_meter()
 
 
 @socketio.on('remove_user', namespace='/projection')
@@ -74,19 +77,23 @@ def remove_user(data):
 def update_user_meter(data):
     print(data)
     player = User.query.filter_by(email=data['email']).first()
-    player.meter_karma  = data['karma']
-    player.meter_life  = data['life']
-    player.meter_status  = data['status']
+    player.meter_karma  += int(data['karma'])
+    player.meter_life  += int(data['life'])
+    player.meter_status  += int(data['status'])
     try:
         db.session.commit()
     except Exception as e:
         db.session.rollback()
         db.session.flush()
     payload = {
-        'karma': data['karma'],
-        'life': data['life'],
-        'status': data['status']
+        'karma': player.meter_karma,
+        'life': player.meter_life,
+        'status': player.meter_status
     }
+    update_earth_meter()
+    if payload['karma'] == 0:
+        socketio.emit('user_left', {'email': player.email}, namespace='/projection')
+
     socketio.emit('update_meter', payload, namespace='/controller',
                 room=clients[data['email']])
 
@@ -101,3 +108,51 @@ def update_user_location(data):
             'y': data['y']
         }
         socketio.emit('movement', payload, namespace='/projection')
+
+
+def update_earth_meter():
+    earth = Level.query.filter_by(meter_name='Karma').first()
+
+    current_users = {}
+    earth.meter_value = 0
+    for user in clients:
+        foo = User.query.filter_by(email=user).first()
+        current_users[foo.email] = {
+            'score': foo.meter_status,
+            'name': foo.name
+        }
+        earth.meter_value += foo.meter_karma
+
+    top_users = list(sorted(current_users, key=lambda k: current_users[k]['score']))
+
+    if len(top_users) == 0:
+        earth.meter_top_player_1 = "N.A."
+        earth.meter_top_player_2 = "N.A."
+        earth.meter_top_player_3 = "N.A."
+    elif len(top_users) == 1:
+        earth.meter_top_player_1 = current_users[top_users[0]]['name']
+        earth.meter_top_player_2 = "N.A."
+        earth.meter_top_player_3 = "N.A."
+    elif len(top_users) == 2:
+        earth.meter_top_player_1 = current_users[top_users[0]]['name']
+        earth.meter_top_player_2 = current_users[top_users[1]]['name']
+        earth.meter_top_player_3 = "N.A."
+    else:
+        earth.meter_top_player_1 = current_users[top_users[0]]['name']
+        earth.meter_top_player_2 = current_users[top_users[1]]['name']
+        earth.meter_top_player_3 = current_users[top_users[2]]['name']
+
+    payload = {
+        'meter_value': earth.meter_value,
+        'top_1': earth.meter_top_player_1,
+        'top_2': earth.meter_top_player_2,
+        'top_3': earth.meter_top_player_3
+    }
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        db.session.flush()
+
+    socketio.emit('earth_meter_update', payload, namespace='/projection')

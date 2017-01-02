@@ -25,8 +25,8 @@ from biennale import db
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120))
-    email = db.Column(db.String(120), unique=True)
+    name = db.Column(db.String(128))
+    email = db.Column(db.String(128), unique=True)
     password_hash = db.Column(db.String(128))
 
     start_coord_x = db.Column(db.Float)
@@ -63,3 +63,24 @@ class User(db.Model):
 
     def __repr__(self):
         return '<USER %r>' % self.email
+
+class Level(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    meter_name = db.Column(db.String(128))
+    meter_value = db.Column(db.Integer)
+    meter_top_player_1 = db.Column(db.String(128))
+    meter_top_player_2 = db.Column(db.String(128))
+    meter_top_player_3 = db.Column(db.String(128))
+
+    def __init__(self, meter_name, meter_value):
+        self.meter_name = meter_name
+        self.meter_value = meter_value
+
+    def get_id(self):
+        try:
+            return unicode(self.id)
+        except NameError:
+            return str(self.id)
+    
+    def __repr__(self):
+        return '<LEVEL %r>' % self.meter_name

@@ -36,10 +36,14 @@ $(document).ready(function() {
         //      'email'         : <the user who joined the game>,
         //      'start_coord_x' : <user's stored x-coordinate from last sesison>,
         //      'start_coord_y' : <user's stored y-coordinate from last session>,
-        //      'meter_life'    : <user's life meter status (in percent)>,
-        //      'meter_status'  : <user's status meter status (in percent)>,
-        //      'meter_karma'   : <user's karma meter status (in percent)>
+        //      'meter_life'    : <user's change in meter value.>,
+        //      'meter_status'  : <user's change in meter value.>,
+        //      'meter_karma'   : <user's change in meter value.>
         // }
+        // 
+        // "user's change in meter value": by how much the meter should change
+        //      use a POSITIVE INTEGER for a positive change (eg, 20),
+        //      and a NEGATIVE INTEGER for a negative change (eg, -20).
         console.log(msg);
     });
 
@@ -49,7 +53,10 @@ $(document).ready(function() {
         // {
         //     'email'         : <email of the user who left the game>
         // }
+        // this should call eliminate_player() at the end to send the last user coordinates
+        // to the database.
         console.log(msg);
+        // eliminate_player(email, location_x, location_y);
     });
 
     socket.on('movement', function(msg){
@@ -59,6 +66,18 @@ $(document).ready(function() {
         //     'email'     : <email of the user who moved>,
         //     'x'         : <movement in the x-direction>,
         //     'y'         : <movement in the y-direction>
+        // }
+        console.log(msg);
+    });
+
+    socket.on('earth_meter_update', function(msg){
+        // code to run when the earth meter updates
+        // msg is of the form:
+        // {
+        //      'meter_value': <value of the meter>
+        //      'top_1': <name of the player with highest karma_value>
+        //      'top_2': <name of the player with second-highest karma_value>
+        //      'top_3': <name of the player with third-highest karma_value>
         // }
         console.log(msg);
     });
@@ -94,4 +113,3 @@ function update_meter(email, karma, life, status) {
     });
     return false;
 }
-

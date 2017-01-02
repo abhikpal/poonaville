@@ -29,6 +29,7 @@ from biennale import db
 from biennale import socketio
 from biennale.control import user_join
 from biennale.database import User
+from biennale.database import Level
 from biennale.forms import LoginForm
 from biennale.forms import SignUpForm
 
@@ -73,6 +74,7 @@ def signup():
 
         try:
             new_user = User(name, email, password)
+            new_user.meter_karma = 200
             db.session.add(new_user)
             db.session.commit()
             flash("Account creation successful.")

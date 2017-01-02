@@ -22,6 +22,7 @@ import sys
 from biennale import app
 from biennale import db
 from biennale import socketio
+from biennale.database import Level
 
 if __name__ == '__main__':
     try:
@@ -35,6 +36,16 @@ if __name__ == '__main__':
             db.drop_all()
             db.create_all()
             print("DATABASE RESET SUCCESSFUL")
+        elif sys.argv[1] == 'initdb':
+            try:
+                earth_karma = Level('Karma', 6000)
+                db.session.add(earth_karma)
+                db.session.commit()
+                print("DATABASE INIT SUCCESSFUL")
+            except Exception as e:
+                db.session.rollback()
+                db.session.flush()
+                print("DATABASE INIT ABORTED.")
         elif sys.argv[1] == 'start':
             socketio.run(app, host='0.0.0.0', debug=True)
         else:
@@ -45,5 +56,6 @@ if __name__ == '__main__':
         print("Possible parameters are:")
         print("\tstart    - Starts the server.")
         print("\tcreatedb - Creates the database.")
+        print("\tinitdb - Creates the database.")
         print("\tpurgedb  - Deletes all information in the database.")
         print("\tresetdb  - Resets the database.")
