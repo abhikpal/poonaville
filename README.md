@@ -25,6 +25,9 @@ pip install -r requirements.txt
 # create the database
 python application.py createdb
 
+# initialize the database with required values
+python application.py initdb
+
 # run the server
 python applicaiton.py start
 ```
