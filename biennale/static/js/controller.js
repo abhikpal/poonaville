@@ -24,11 +24,11 @@ $(document).ready(function() {
     // Connect to the Socket.IO server.
     socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
 
-    $('#up').on("click",    function() { send_command('0', '1'); });
-    $('#down').on("click",  function() { send_command('0', '-1') });
-    $('#left').on("click",  function() { send_command('-1', '0') });
-    $('#right').on("click", function() { send_command('1', '0') });
-
+    socket.on('connect', function () {
+        console.log('Client has connected to the server!');
+        document.getElementById("socketconn").style.color = "green";
+    });
+    
     socket.on('update_meter', function(msg) {
         // What to do when the meter is updates
         // This should change progress bars on the controller, etc.
@@ -63,4 +63,7 @@ function send_command(xdir, ydir) {
     return false;
 }
 
-
+function up() { send_command('0', '1'); }
+function down() { send_command('0', '-1') }
+function left() { send_command('-1', '0') }
+function right() { send_command('1', '0') }
