@@ -81,7 +81,7 @@ def signup():
         except Exception as e:
             db.session.rollback()
             db.session.flush()
-            flash("The account alreaddy exists!")
+            flash("The username already exists!")
         return redirect('/')
         
     return render_template('signup.html', form=signup_form, async_mode=socketio.async_mode)

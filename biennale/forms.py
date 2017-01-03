@@ -29,12 +29,12 @@ from wtforms.validators import EqualTo
 
 class SignUpForm(FlaskForm):
     name = StringField("Name", validators=[Required()])
-    email = StringField("Email", validators=[Email(), Required()])
+    email = StringField("Select Username", validators=[Required()])
     password = PasswordField("Select password", validators=[Required()])
     submit = SubmitField("Submit")
 
 
 class LoginForm(FlaskForm):
-    email = StringField("Email", validators=[Required(), Email()])
+    email = StringField("username", validators=[Required()])
     password = PasswordField("Password", validators=[Required()])
     submit = SubmitField("Submit")
